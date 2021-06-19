@@ -1,29 +1,29 @@
-/**
- *  @filename   :   epd2in9b.h
- *  @brief      :   Header file for Dual-color e-paper library epd2in9b.cpp
- *  @author     :   Yehui from Waveshare
- *  @enhancement:	  For particle.io by ScruffR (September 23 2017)
- *
- *  Copyright (C) Waveshare     July 31 2017
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documnetation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to  whom the Software is
- * furished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS OR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
+///
+///  @filename   :   epd2in9b.h
+///  @brief      :   Header file for Dual-color e-paper library epd2in9b.cpp
+///  @author     :   Yehui from Waveshare
+///  @enhancement:	  For particle.io by ScruffR (September 23 2017)
+/// 
+///  Copyright (C) Waveshare     July 31 2017
+/// 
+/// Permission is hereby granted, free of charge, to any person obtaining a copy
+/// of this software and associated documnetation files (the "Software"), to deal
+/// in the Software without restriction, including without limitation the rights
+/// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+/// copies of the Software, and to permit persons to  whom the Software is
+/// furished to do so, subject to the following conditions:
+/// 
+/// The above copyright notice and this permission notice shall be included in
+/// all copies or substantial portions of the Software.
+/// 
+/// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+/// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+/// FITNESS OR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+/// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+/// LIABILITY WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+/// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+/// THE SOFTWARE.
+///
 
 #ifndef EPD2IN9B_H
 #define EPD2IN9B_H
@@ -85,8 +85,7 @@ public:
   Epd()
     : EpdIf(), _width(EPD_WIDTH), _height(EPD_HEIGHT), _orientation(NORMAL)
   {}
-  Epd(SPIClass& hwSPI, int16_t pinCS, int16_t pinDC, int16_t pinReset, int16_t pinBusy, uint16_t Width = EPD_WIDTH, uint16_t Height = EPD_HEIGHT, SCREEN_ORIENTATION Orientation = NORMAL)
-    
+  Epd(SPIClass& hwSPI, int16_t pinCS, int16_t pinDC, int16_t pinReset, int16_t pinBusy, uint16_t Width = EPD_WIDTH, uint16_t Height = EPD_HEIGHT, SCREEN_ORIENTATION Orientation = NORMAL)    
     : EpdIf(hwSPI, pinCS, pinDC, pinReset, pinBusy), _width(Width), _height(Height), _orientation(Orientation)
   {}
 
@@ -118,6 +117,4 @@ private:
   SCREEN_ORIENTATION _orientation;
 };
 
-#endif /* EPD2IN9B_H */
-
-/* END OF FILE */
+#endif // EPD2IN9B_H 

@@ -1,35 +1,35 @@
-/**
- *  @filename   :   epdpaint.cpp
- *  @brief      :   Paint tools
- *  @author     :   Yehui from Waveshare
- *
- *  Copyright (C) Waveshare     September 9 2017
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documnetation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to  whom the Software is
- * furished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS OR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
+///
+///  @filename   :   epdpaint.cpp
+///  @brief      :   Paint tools
+///  @author     :   Yehui from Waveshare
+///
+///  Copyright (C) Waveshare     September 9 2017
+///
+/// Permission is hereby granted, free of charge, to any person obtaining a copy
+/// of this software and associated documnetation files (the "Software"), to deal
+/// in the Software without restriction, including without limitation the rights
+/// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+/// copies of the Software, and to permit persons to  whom the Software is
+/// furished to do so, subject to the following conditions:
+///
+/// The above copyright notice and this permission notice shall be included in
+/// all copies or substantial portions of the Software.
+///
+/// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+/// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+/// FITNESS OR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+/// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+/// LIABILITY WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+/// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+/// THE SOFTWARE.
+/// 
 
 #include <avr/pgmspace.h>
 #include "epdpaint.h"
 
 Paint::Paint(unsigned char* image, int16_t screenWidth, int16_t screenHeight, ORIENTATION orientation, bool inverted) {
   this->image = image;
-  /* 1 byte = 8 pixels, so the width should be the multiple of 8 */
+  // 1 byte = 8 pixels, so the width should be the multiple of 8 
   this->width = screenWidth % 8 ? screenWidth + 8 - (screenWidth % 8) : screenWidth;
   this->height = screenHeight;
   this->orientation = orientation;
@@ -40,17 +40,17 @@ Paint::Paint(unsigned char* image, int16_t screenWidth, int16_t screenHeight, OR
 
 Paint::~Paint() {}
 
-/**
- *  @brief: clear the image
- */
+///
+/// @brief: clear the image
+///
 void Paint::Clear(int16_t colored) {
   memset(this->image, ((bool)colored != this->inverse) ? 0xFF : 0x00, this->height * this->width / 8);
 }
 
-/**
- *  @brief: this draws a pixel by absolute coordinates.
- *          this function won't be affected by the rotate parameter.
- */
+///
+/// @brief: this draws a pixel by absolute coordinates.
+///         this function won't be affected by the rotate parameter.
+///
 void Paint::DrawAbsolutePixel(int16_t x, int16_t y, int16_t colored) {
   if (x < 0 || x >= this->width || y < 0 || y >= this->height)
     return;
@@ -61,9 +61,9 @@ void Paint::DrawAbsolutePixel(int16_t x, int16_t y, int16_t colored) {
     image[(x + y * this->width) / 8] &= ~(0x80 >> (x % 8));
 }
 
-/**
- *  @brief: Getters and Setters
- */
+///
+/// @brief: Getters and Setters
+///
 unsigned char* Paint::GetImage(void) {
   return this->image;
 }
@@ -126,9 +126,9 @@ bool Paint::isInverse(bool invert) {
   return previous;
 }
 
-/**
- *  @brief: this draws a pixel by the coordinates
- */
+///
+/// @brief: this draws a pixel by the coordinates
+///
 void Paint::TransformXY(int16_t* x, int16_t* y) {
   int16_t dmy;
 
@@ -153,9 +153,9 @@ void Paint::TransformXY(int16_t* x, int16_t* y) {
   }
 }
 
-/**
- *  @brief: this draws a pixel by the coordinates
- */
+///
+/// @brief: this draws a pixel by the coordinates
+///
 void Paint::DrawPixel(int16_t x, int16_t y, int16_t colored) {
   TransformXY(&x, &y);
   if (x < 0 || x >= this->width || y < 0 || y >= this->height)
@@ -163,9 +163,9 @@ void Paint::DrawPixel(int16_t x, int16_t y, int16_t colored) {
   DrawAbsolutePixel(x, y, colored);
 }
 
-/**
- *  @brief: this draws a charactor on the frame buffer but not refresh
- */
+///
+/// @brief: this draws a charactor on the frame buffer but not refresh
+///
 void Paint::DrawCharAt(int16_t x, int16_t y, char ascii_char, const sFONT* font, int16_t colored) {
   int16_t i;
   int16_t j;
@@ -188,31 +188,31 @@ void Paint::DrawCharAt(int16_t x, int16_t y, char ascii_char, const sFONT* font,
   }
 }
 
-/**
-*  @brief: this displays a string on the frame buffer but not refresh
-*/
+/// 
+/// @brief: this displays a string on the frame buffer but not refresh
+/// 
 void Paint::DrawStringAt(int16_t x, int16_t y, const char* text, const sFONT* font, int16_t colored) {
   const char* p_text = text;
   uint16_t counter = 0;
   int16_t refcolumn = x;
 
-  /* Send the string character by character on EPD */
+  // Send the string character by character on EPD 
   while (*p_text != 0) {
-/* Display one character on EPD */
+  // Display one character on EPD
     DrawCharAt(refcolumn, y, *p_text, font, colored);
-    /* Decrement the column position by 16 */
+    // Decrement the column position by 16
     refcolumn += font->Width;
-    /* Point on the next character */
+    // Point on the next character
     p_text++;
     counter++;
   }
 }
 
-/**
-*  @brief: this draws a line on the frame buffer
-*/
+/// 
+/// @brief: this draws a line on the frame buffer
+/// 
 void Paint::DrawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t colored) {
-/* Bresenham algorithm */
+// Bresenham algorithm 
   TransformXY(&x0, &y0);
   TransformXY(&x1, &y1);
   int16_t dx = x1 - x0 >= 0 ? x1 - x0 : x0 - x1;
@@ -234,9 +234,9 @@ void Paint::DrawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t col
   }
 }
 
-/**
-*  @brief: this draws a horizontal line on the frame buffer
-*/
+/// 
+/// @brief: this draws a horizontal line on the frame buffer
+/// 
 void Paint::DrawHorizontalLine(int16_t x, int16_t y, int16_t line_width, int16_t colored) {
   int16_t i;
   for (i = x; i < x + line_width; i++) {
@@ -244,9 +244,9 @@ void Paint::DrawHorizontalLine(int16_t x, int16_t y, int16_t line_width, int16_t
   }
 }
 
-/**
-*  @brief: this draws a vertical line on the frame buffer
-*/
+/// 
+/// @brief: this draws a vertical line on the frame buffer
+/// 
 void Paint::DrawVerticalLine(int16_t x, int16_t y, int16_t line_height, int16_t colored) {
   int16_t i;
   for (i = y; i < y + line_height; i++) {
@@ -254,9 +254,9 @@ void Paint::DrawVerticalLine(int16_t x, int16_t y, int16_t line_height, int16_t 
   }
 }
 
-/**
-*  @brief: this draws a rectangle
-*/
+/// 
+/// @brief: this draws a rectangle
+/// 
 void Paint::DrawRectangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t colored) {
   int16_t min_x, min_y, max_x, max_y;
   min_x = x1 > x0 ? x0 : x1;
@@ -270,9 +270,9 @@ void Paint::DrawRectangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_
   DrawVerticalLine(max_x, min_y, max_y - min_y + 1, colored);
 }
 
-/**
-*  @brief: this draws a filled rectangle
-*/
+/// 
+/// @brief: this draws a filled rectangle
+/// 
 void Paint::DrawFilledRectangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t colored) {
   int16_t min_x, min_y, max_x, max_y;
   int16_t i;
@@ -286,11 +286,11 @@ void Paint::DrawFilledRectangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, 
   }
 }
 
-/**
-*  @brief: this draws a circle
-*/
+/// 
+/// @brief: this draws a circle
+/// 
 void Paint::DrawCircle(int16_t x, int16_t y, int16_t radius, int16_t colored) {
-/* Bresenham algorithm */
+  // Bresenham algorithm 
   int16_t x_pos = -radius;
   int16_t y_pos = 0;
   int16_t err = 2 - 2 * radius;
@@ -314,11 +314,11 @@ void Paint::DrawCircle(int16_t x, int16_t y, int16_t radius, int16_t colored) {
   } while (x_pos <= 0);
 }
 
-/**
-*  @brief: this draws a filled circle
-*/
+/// 
+/// @brief: this draws a filled circle
+/// 
 void Paint::DrawFilledCircle(int16_t x, int16_t y, int16_t radius, int16_t colored) {
-/* Bresenham algorithm */
+  // Bresenham algorithm 
   int16_t x_pos = -radius;
   int16_t y_pos = 0;
   int16_t err = 2 - 2 * radius;
@@ -343,5 +343,3 @@ void Paint::DrawFilledCircle(int16_t x, int16_t y, int16_t radius, int16_t color
     }
   } while (x_pos <= 0);
 }
-
-/* END OF FILE */
