@@ -29,22 +29,22 @@
 #ifndef EPDIF_H
 #define EPDIF_H
 
-#include <Arduino.h>
-#include <SPI.h>
-
 #if defined(PARTICLE)
-#define yield() Particle.process()
+#  include <Particle.h>
+#  define yield() Particle.process()
 #else
-#define yield() ;
+#  include <Arduino.h>
+#  include <SPI.h>
+#  define yield() ;
 #endif
 
 class EpdIf {
 public:
   EpdIf(void)
-    : _SPI(SPI), _CS(10), _DC(9), _RST(8), _BUSY(7), _init(false)
+    : _SPI(SPI), _spiCfg(SPISettings(2*MHZ, MSBFIRST, SPI_MODE0)), _CS(10), _DC(9), _RST(8), _BUSY(7), _init(false)
   {}
   EpdIf(SPIClass& hwSPI, int16_t pinCS, int16_t pinDC, int16_t pinReset, int16_t pinBusy)
-    : _SPI(hwSPI), _CS(pinCS), _DC(pinDC), _RST(pinReset), _BUSY(pinBusy), _init(false)
+    : _SPI(hwSPI), _spiCfg(SPISettings(2*MHZ, MSBFIRST, SPI_MODE0)), _CS(pinCS), _DC(pinDC), _RST(pinReset), _BUSY(pinBusy), _init(false)
   {}
 
   ~EpdIf(void)
@@ -59,7 +59,7 @@ public:
 
 protected:
   SPIClass&   _SPI;
-  SPISettings _spiConfig(2000000, MSBFIRST, SPI_MODE0);
+  SPISettings _spiCfg;
   int16_t     _CS;
   int16_t     _DC;
   int16_t     _RST;

@@ -27,7 +27,12 @@
 #ifndef EPDPAINT_H
 #define EPDPAINT_H
 
-#include <Arduino.h>
+#if defined(PARTICLE)
+#  include <Particle.h>
+#else
+#  include <Arduino.h>
+#endif
+#include "fonts.h"
 
 // Display orientation (as set in epd2in9b.h for PANEL_SETTINGs)
 enum ORIENTATION {
@@ -37,7 +42,6 @@ enum ORIENTATION {
   LANDSCAPE_FLIPPED = 0b0000,
 };
 
-#include "fonts.h"
 
 class Paint {
 public:

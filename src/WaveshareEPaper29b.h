@@ -26,7 +26,9 @@
 /// 
 #pragma once
 
-#include <Particle.h> 
+#if defined(PARTICLE)
+#  include <Particle.h> 
+#endif
 #include "epdif.h"
 #include "epd2in9b.h"
 #include "epdpaint.h"

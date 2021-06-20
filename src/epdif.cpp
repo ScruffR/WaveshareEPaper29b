@@ -33,14 +33,14 @@ bool EpdIf::IfInit(void) {
   pinMode(_RST, OUTPUT);
   pinMode(_DC, OUTPUT);
   pinMode(_BUSY, INPUT);
-  _SPI.begin();
+  _SPI.begin(_CS);
   return (_init = true);
 }
 
 int16_t EpdIf::DigitalRead(int16_t pin) {
-#if defined(PARTICLE) && (SYSTEM_VERSION >= 0x00040400)  
+#if defined(PARTICLE) && (SYSTEM_VERSION >= 0x00040400) 
   if (!_init) IfInit();
-  return pinReadFast(pin);
+  return digitalRead(pin); //pinReadFast(pin); crashes with hard fault?!?!?!?
 #else
   return digitalRead(pin);
 #endif
@@ -49,7 +49,8 @@ int16_t EpdIf::DigitalRead(int16_t pin) {
 void EpdIf::DigitalWrite(int16_t pin, int16_t value) {
 #if defined(PARTICLE) && (SYSTEM_VERSION >= 0x00040400)
   if (!_init) IfInit();
-  digitalWriteFast(pin, value);
+  digitalWrite(pin, value);
+  //digitalWriteFast(pin, value); // digitalWriteFast() crashes with hard fault?!?!?!?
 #else
   digitalWrite(pin, value);
 #endif
@@ -57,7 +58,7 @@ void EpdIf::DigitalWrite(int16_t pin, int16_t value) {
 
 void EpdIf::DelayMs(uint16_t delaytime) {
 #if defined(PARTICLE)
-  for (uint32_t _ms = millis(); millis() - _ms < delaytime; Particle.process());
+  for (uint32_t _ms = millis(); millis() - _ms < delaytime; Particle.process()); delay(100);
 #else
   delay(delaytime);
 #endif

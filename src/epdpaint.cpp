@@ -24,7 +24,9 @@
 /// THE SOFTWARE.
 /// 
 
-#include <avr/pgmspace.h>
+#if !defined(PARTICLE)
+#  include <avr/pgmspace.h>
+#endif
 #include "epdpaint.h"
 
 Paint::Paint(unsigned char* image, int16_t screenWidth, int16_t screenHeight, ORIENTATION orientation, bool inverted) {

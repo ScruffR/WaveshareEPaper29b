@@ -35,7 +35,7 @@ bool Epd::Init(void) {
 
   // EPD hardware init start 
   Reset();
-  _SPI.beginTransaction(_spiConfig);
+  _SPI.beginTransaction(_spiCfg);
   SendCommand(BOOSTER_SOFT_START);
   SendData(0x17, 3);
   SendCommand(POWER_ON);
@@ -56,6 +56,7 @@ bool Epd::Init(void) {
   SendData(0X0A);
   _SPI.endTransaction();
   // EPD hardware init end 
+
   return true;
 }
 
@@ -67,8 +68,7 @@ bool Epd::Init(SCREEN_ORIENTATION Orientation) {
 ///
 /// @brief: basic function for sending commands
 ///
-void Epd::SendCommand(unsigned char command)
-{
+void Epd::SendCommand(unsigned char command) {
   DigitalWrite(_DC, LOW);
   SpiTransfer(command, 1);
 }
@@ -111,7 +111,7 @@ void Epd::Reset(void) {
 bool Epd::SetPartialWindow(const unsigned char* buffer_black, const unsigned char* buffer_red, int16_t x, int16_t y, int16_t w, int16_t h, bool transmitBlack, bool transmitRed) {
   if (isBusy()) return false;
 
-  _SPI.beginTransaction(_spiConfig);
+  _SPI.beginTransaction(_spiCfg);
   SendCommand(PARTIAL_IN);
   SendCommand(PARTIAL_WINDOW);
   unsigned char dims[] =
@@ -232,7 +232,7 @@ bool Epd::SetPartialWindowRed(const unsigned char* buffer_red, int16_t x, int16_
 bool Epd::DisplayFrame(const unsigned char* frame_buffer_black, const unsigned char* frame_buffer_red) {
   if (isBusy()) return false;
 
-  _SPI.beginTransaction(_spiConfig);
+  _SPI.beginTransaction(_spiCfg);
   if (frame_buffer_black != NULL)
   {
     SendCommand(DATA_START_TRANSMISSION_1);
@@ -260,7 +260,7 @@ bool Epd::DisplayFrame(const unsigned char* frame_buffer_black, const unsigned c
 bool Epd::ClearFrame(void) {
   if (isBusy()) return false;
 
-  _SPI.beginTransaction(_spiConfig);
+  _SPI.beginTransaction(_spiCfg);
   SendCommand(TCON_RESOLUTION);
   unsigned char dims[] =
   { (_width >>8)
@@ -289,7 +289,7 @@ bool Epd::ClearFrame(void) {
 bool Epd::DisplayFrame(void) {
   if (isBusy()) return false;
 
-  _SPI.beginTransaction(_spiConfig);
+  _SPI.beginTransaction(_spiCfg);
   SendCommand(DISPLAY_REFRESH);
   //WaitUntilIdle();
   _SPI.endTransaction();
@@ -304,7 +304,7 @@ bool Epd::DisplayFrame(void) {
 ///         You can use Epd::Reset() to awaken and use Epd::Init() to initialize.
 /// 
 void Epd::Sleep() {
-  _SPI.beginTransaction(_spiConfig);
+  _SPI.beginTransaction(_spiCfg);
   SendCommand(DEEP_SLEEP);
   SendData(0xa5);
   _SPI.endTransaction();
